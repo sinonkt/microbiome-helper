@@ -27,12 +27,12 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh &
   conda config --add channels bioconda && \
   conda config --add channels conda-forge
 
-# Install qiime1 and qiime2 
+# Install qiime2 
 # RUN wget https://data.qiime2.org/distro/core/qiime2-2018.11-py35-linux-conda.yml && \
-#   conda create -n qiime1 python=2.7 qiime matplotlib=1.4.3 bowtie2 mock nose -c bioconda && \
 #   conda env create -n qiime2 --file qiime2-2018.11-py35-linux-conda.yml && \
 #   rm qiime2-2018.11-py35-linux-conda.yml
 
+# conda create -n qiime1 python=2.7 qiime matplotlib=1.4.3 bowtie2 mock nose -c bioconda && \
 # Install qiime1
 RUN conda install bowtie2
 
