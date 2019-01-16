@@ -2,7 +2,7 @@ FROM centos:7
 
 MAINTAINER Krittin Phornsiricharoenphant <oatkrittin@gmail.com>
 
-ENV PATH $PATH:/root/bin:/root/miniconda3/bin:/root/pear/bin:/root/FastQC:/root/microbiome_helper
+ENV PATH $PATH:/opt/bin:/opt/miniconda3/bin:/opt/pear/bin:/opt/FastQC:/opt/microbiome_helper
 
 RUN yum -y update && \
   yum -y groupinstall "Development Tools" && \
@@ -21,7 +21,7 @@ RUN yum -y update && \
 # Install Miniconda
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
   chmod u+x Miniconda3-latest-Linux-x86_64.sh && \
-  ./Miniconda3-latest-Linux-x86_64.sh -b && \
+  ./Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3 && \
   rm -f Miniconda3-latest-Linux-x86_64.sh && \
   conda config --add channels defaults && \
   conda config --add channels bioconda && \
@@ -34,20 +34,20 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh &
 
 # conda create -n qiime1 python=2.7 qiime matplotlib=1.4.3 bowtie2 mock nose -c bioconda && \
 # Install qiime1
-RUN conda install bowtie2
+RUN conda install bowtie2 bbmap
 
-WORKDIR /root
+WORKDIR /opt
 # Install DIAMOND
-RUN mkdir /root/bin && \
+RUN mkdir /opt/bin && \
   wget http://github.com/bbuchfink/diamond/releases/download/v0.9.24/diamond-linux64.tar.gz && \
   tar xzf diamond-linux64.tar.gz && \
   rm -f diamond-linux64.tar.gz && \
   mv diamond bin/.
 
 # Install PEAR
-ADD pear-0.9.11-linux-x86_64.tar.gz /root/.
+ADD pear-0.9.11-linux-x86_64.tar.gz /opt/.
 
-RUN mv /root/pear-0.9.11-linux-x86_64 /root/pear
+RUN mv /opt/pear-0.9.11-linux-x86_64 /opt/pear
 
 # Install FastQC
 RUN wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.8.zip && \
@@ -59,3 +59,5 @@ RUN wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.8
 RUN git clone https://github.com/LangilleLab/microbiome_helper.git && \
   wget -O - http://cpanmin.us | perl - --self-upgrade && \
   cpanm File::Basename Getopt::Long List::Util Parallel::ForkManager Pod::Usage
+
+RUN chmod -R 755 /opt
